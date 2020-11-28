@@ -9,6 +9,7 @@ import 'package:wholesale/models/user_model.dart';
 import 'package:wholesale/static_data.dart';
 import 'package:wholesale/ui/distributor/barang/manajemen_barang_distributor_page.dart';
 import 'package:wholesale/ui/distributor/mitra/manajemen_mitra_page.dart';
+import 'package:wholesale/ui/distributor/transaksi/transasksi_distributor_page.dart';
 import 'package:wholesale/ui/share/dashboard_page.dart';
 import 'package:wholesale/ui/share/profile_page.dart';
 import 'package:wholesale/ui/toko/karyawan/manajemen_karyawan_page.dart';
@@ -22,6 +23,29 @@ class HomeController extends GetxController {
 
   final listDrawer = [].obs;
   final listPage = [].obs;
+  List<Widget> actionsList = [];
+  void updateListBarang() {
+    actionsList = [
+      PopupMenuButton<String>(
+        onSelected: (choice) {
+          if (choice == "jenis") {
+            Get.toNamed("/jenisbarang");
+          } else if (choice == "ukuran") {
+            Get.toNamed("/ukuranbarang");
+          }
+        },
+        itemBuilder: (BuildContext context) {
+          return ["jenis", "ukuran"].map((String choice) {
+            return PopupMenuItem<String>(
+              value: choice,
+              child: Text(choice.capitalizeFirst + " Barang"),
+            );
+          }).toList();
+        },
+      )
+    ];
+    update();
+  }
 
   @override
   void onInit() async {
@@ -37,6 +61,7 @@ class HomeController extends GetxController {
           {"title": "Dashboard", "icon": Icon(Icons.dashboard)},
           {"title": "Profile", "icon": Icon(Icons.account_box)},
           {"title": "Barang", "icon": Icon(Icons.local_offer)},
+          {"title": "Transaksi", "icon": Icon(Icons.monetization_on)},
           {"title": "Data Penjualan", "icon": Icon(Icons.bar_chart)},
           {"title": "Keuangan", "icon": Icon(Icons.account_balance_wallet)},
           {"title": "Manajemen Mitra", "icon": Icon(Icons.group)},
@@ -45,6 +70,7 @@ class HomeController extends GetxController {
           DashboardPage(),
           ProfilePage(),
           ManajemenBarangDistributorPage(),
+          Container(),
           Container(),
           Container(),
           ManajemenMitraPage(),
@@ -145,83 +171,113 @@ class HomeController extends GetxController {
 
 class HomePage extends GetView<HomeController> {
   final controller = Get.put(HomeController());
+  DateTime currentBackPressTime;
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > Duration(seconds: 3)) {
+      currentBackPressTime = now;
+      Scaffold.of(Get.context)
+          .showSnackBar(SnackBar(content: Text('Klik 2 kali untuk keluar')));
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(StaticData.screenWidth, StaticData.screenHeight),
         allowFontScaling: true);
-    return Scaffold(
-      appBar: AppBar(
-        title: Obx(() =>
-            Txt(controller.listDrawer[controller.page.value]['title'] ?? "")),
-      ),
-      body: Obx(() => controller.listPage[controller.page.value]),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.account_box, color: Colors.white, size: 50.sp),
-                  SizedBox(
-                    height: 0.01.sh,
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: GetX<HomeController>(
+        builder: (_) => Scaffold(
+          appBar: AppBar(
+            title: Txt(_.listDrawer[_.page.value]['title'] ?? ""),
+            actions: _.actionsList,
+          ),
+          body: Obx(() => _.listPage[_.page.value]),
+          drawer: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Drawer(
+              child: ListView(
+                // Important: Remove any padding from the ListView.
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  DrawerHeader(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.account_box,
+                            color: Colors.white, size: 50.sp),
+                        SizedBox(
+                          height: 0.01.sh,
+                        ),
+                        Obx(() => Txt(
+                              controller.userModel.value.nama.capitalizeFirst,
+                              style: TxtStyle()
+                                ..textColor(Colors.white)
+                                ..fontSize(16.sp),
+                            ))
+                      ],
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF018577),
+                    ),
                   ),
-                  Obx(() => Txt(
-                        controller.userModel.value.nama.capitalizeFirst,
-                        style: TxtStyle()
-                          ..textColor(Colors.white)
-                          ..fontSize(16.sp),
-                      ))
+                  Obx(() => Column(
+                      children: controller.listDrawer
+                          .asMap()
+                          .map((index, value) => MapEntry(index, Obx(() {
+                                if (index == 4 &&
+                                    controller.userModel.value.role_id != 1) {
+                                  return Container();
+                                } else {
+                                  return ListTile(
+                                    selected: index == controller.page.value,
+                                    leading: value['icon'],
+                                    title: Text(value['title']),
+                                    onTap: () {
+                                      controller.page.value = index;
+                                      Navigator.pop(context);
+                                      controller.actionsList = [];
+                                      if (controller.userModel.value.role_id ==
+                                              1 &&
+                                          value['title'].contains('Barang')) {
+                                        controller.updateListBarang();
+                                      }
+                                    },
+                                  );
+                                }
+                              })))
+                          .values
+                          .toList())),
+                  Divider(),
+                  Txt("Sistem",
+                      style: TxtStyle()
+                        ..textColor(Colors.grey[500])
+                        ..margin(left: 0.05.sw)),
+                  ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text('Tentang'),
+                    onTap: () {
+                      controller.about();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.power_settings_new),
+                    title: Text('Logout'),
+                    onTap: () {
+                      controller.confirmLogout();
+                    },
+                  ),
                 ],
               ),
-              decoration: BoxDecoration(
-                color: Color(0xFF018577),
-              ),
             ),
-            Obx(() => Column(
-                children: controller.listDrawer
-                    .asMap()
-                    .map((index, value) => MapEntry(index, Obx(() {
-                          if (index == 4 &&
-                              controller.userModel.value.role_id != 1) {
-                            return Container();
-                          } else {
-                            return ListTile(
-                              selected: index == controller.page.value,
-                              leading: value['icon'],
-                              title: Text(value['title']),
-                              onTap: () {
-                                controller.page.value = index;
-                                Navigator.pop(context);
-                              },
-                            );
-                          }
-                        })))
-                    .values
-                    .toList())),
-            Divider(),
-            Txt("Sistem",
-                style: TxtStyle()
-                  ..textColor(Colors.grey[500])
-                  ..margin(left: 0.05.sw)),
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text('Tentang'),
-              onTap: () {
-                controller.about();
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.power_settings_new),
-              title: Text('Logout'),
-              onTap: () {
-                controller.confirmLogout();
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

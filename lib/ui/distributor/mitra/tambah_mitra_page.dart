@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:wholesale/bloc/distributor/distributortoko_bloc.dart';
+import 'package:wholesale/bloc/distributor/toko/distributortoko_bloc.dart';
 import 'package:wholesale/models/toko_model.dart';
 import 'package:wholesale/static_data.dart';
 import 'package:wholesale/ui/components/item_button_process.dart';

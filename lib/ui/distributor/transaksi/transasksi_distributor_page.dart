@@ -8,38 +8,64 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wholesale/bloc/distributor/barang/distributor_barang_bloc.dart';
 import 'package:wholesale/models/distributor_barang_model.dart';
+import 'package:wholesale/models/toko_model.dart';
 import 'package:wholesale/static_data.dart';
-import 'package:wholesale/ui/home_page.dart';
 
-class ManajemenBarangDistributorPage extends StatelessWidget {
-  final homeController = Get.find<HomeController>();
+class TransaksiDistributorPage extends StatelessWidget {
+  TokoModel toko;
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(StaticData.screenWidth, StaticData.screenHeight),
         allowFontScaling: true);
-    return Stack(
-      children: [
-        BlocProvider<DistributorBarangBloc>(
-          create: (context) =>
-              DistributorBarangBloc()..add(DistributorBarangGetListEvent()),
-          child: ManajemenBarangDistributorView(),
-        ),
-        Positioned(
-            bottom: 20,
-            right: 20,
-            child: FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                Get.toNamed("/distributortambahbarang");
-              },
-            )),
-      ],
+    toko = Get.arguments;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Tambah Barang Toko ${toko.nama}"),
+      ),
+      body: Stack(
+        children: [
+          BlocProvider<DistributorBarangBloc>(
+            create: (context) =>
+                DistributorBarangBloc()..add(DistributorBarangGetListEvent()),
+            child: TransaksiDistributorView(),
+          ),
+          Positioned(
+              bottom: 20,
+              right: 20,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: -5,
+                    right: -5,
+                    child: Parent(
+                        child: Txt("10",
+                            style: TxtStyle()
+                              ..textColor(Colors.black)
+                              ..textAlign.center()
+                              ..alignment.center()),
+                        style: ParentStyle()
+                          ..background.color(Colors.white)
+                          ..height(25)
+                          ..width(25)
+                          ..borderRadius(all: 50)),
+                  ),
+                  FloatingActionButton(
+                    isExtended: true,
+                    child: Icon(Icons.shopping_bag),
+                    onPressed: () {
+                      Get.toNamed("/distributortambahbarang");
+                    },
+                  ),
+                ],
+              )),
+        ],
+      ),
     );
   }
 }
 
-class ManajemenBarangDistributorView extends StatelessWidget {
+class TransaksiDistributorView extends StatelessWidget {
   DistributorBarangBloc bloc;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -69,7 +95,6 @@ class ManajemenBarangDistributorView extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: TextField(
             controller: searchController,
-            focusNode: FocusNode(),
             decoration: InputDecoration(
                 suffixIcon: IconButton(
                   icon: Icon(Icons.search),
@@ -80,7 +105,7 @@ class ManajemenBarangDistributorView extends StatelessWidget {
                   },
                 ),
                 filled: true,
-                hintText: "Cari Barang...",
+                hintText: "Search",
                 fillColor: Colors.white),
           ),
         ),
@@ -119,62 +144,56 @@ class ManajemenBarangDistributorView extends StatelessWidget {
                   DistributorBarangListLoaded stateData = state;
                   if (stateData.distributorBarangs != null &&
                       stateData.distributorBarangs.length > 0) {
-                    return GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: SmartRefresher(
-                        controller: _refreshController,
-                        enablePullDown: true,
-                        enablePullUp: true,
-                        header: WaterDropMaterialHeader(
-                          backgroundColor: Theme.of(context).primaryColor,
-                        ),
-                        onRefresh: _onRefresh,
-                        onLoading: _onLoading,
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2),
-                          itemCount: stateData.distributorBarangs.length,
-                          itemBuilder: (context, index) {
-                            DistributorBarangModel barang =
-                                stateData.distributorBarangs[index];
-                            return Parent(
-                              gesture: Gestures()
-                                ..onTap(() {
-                                  Get.toNamed("/distributorbarang",
-                                      arguments: barang);
-                                }),
-                              child: Container(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Flexible(
-                                        flex: 3,
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  "${StaticData.baseUrl}/uploads/${barang.foto ?? 'kosong.png'}",
-                                              fit: BoxFit.fill,
-                                              placeholder: (context, url) =>
-                                                  new CircularProgressIndicator(),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      new Icon(Icons.error),
-                                            ))),
-                                    Flexible(
-                                        flex: 1, child: Txt(barang.nama_barang))
-                                  ],
-                                ),
+                    return SmartRefresher(
+                      controller: _refreshController,
+                      enablePullDown: true,
+                      enablePullUp: true,
+                      header: WaterDropMaterialHeader(
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                      onRefresh: _onRefresh,
+                      onLoading: _onLoading,
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
+                        itemCount: stateData.distributorBarangs.length,
+                        itemBuilder: (context, index) {
+                          DistributorBarangModel barang =
+                              stateData.distributorBarangs[index];
+                          return Parent(
+                            gesture: Gestures()
+                              ..onTap(() {
+                                Get.toNamed("/distributorbarang",
+                                    arguments: barang);
+                              }),
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Flexible(
+                                      flex: 3,
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "${StaticData.baseUrl}/uploads/${barang.foto ?? 'kosong.png'}",
+                                            fit: BoxFit.fill,
+                                            placeholder: (context, url) =>
+                                                new CircularProgressIndicator(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    new Icon(Icons.error),
+                                          ))),
+                                  Flexible(
+                                      flex: 1, child: Txt(barang.nama_barang))
+                                ],
                               ),
-                              style: ParentStyle()..margin(all: 5),
-                            );
-                          },
-                        ),
+                            ),
+                            style: ParentStyle()..margin(all: 5),
+                          );
+                        },
                       ),
                     );
                   } else {

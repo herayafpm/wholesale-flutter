@@ -6,12 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:wholesale/bloc/distributor/barang/stok/distributor_barang_stok_bloc.dart';
-import 'package:wholesale/bloc/distributor/distributortoko_bloc.dart';
-import 'package:wholesale/bloc/toko/karyawan/karyawan_bloc.dart';
 import 'package:wholesale/models/distributor_barang_model.dart';
 import 'package:wholesale/models/distributor_barang_stok_model.dart';
-import 'package:wholesale/models/karyawan_model.dart';
-import 'package:wholesale/models/toko_model.dart';
 import 'package:wholesale/static_data.dart';
 import 'package:wholesale/ui/components/item_button_process.dart';
 import 'package:wholesale/ui/components/item_input_text.dart';

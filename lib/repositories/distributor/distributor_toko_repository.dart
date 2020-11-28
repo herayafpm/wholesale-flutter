@@ -6,11 +6,11 @@ import 'package:wholesale/utils/response_utils.dart';
 
 abstract class DistributorTokoRepository {
   static Future<Map<String, dynamic>> getToko(
-      {int limit = 10, int offset = 0}) async {
+      {int limit = 10, int offset = 0, String search = ""}) async {
     try {
       Dio dio = await DioService.withToken();
-      Response response =
-          await dio.get("/distributor/toko?limit=$limit&offset=$offset");
+      Response response = await dio
+          .get("/distributor/toko?limit=$limit&offset=$offset&search=$search");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;

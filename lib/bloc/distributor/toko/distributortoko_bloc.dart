@@ -19,8 +19,8 @@ class DistributorTokoBloc
     if (event is DistributorTokoGetListEvent) {
       List<TokoModel> tokos = [];
       if (state is DistributorTokoInitial || event.refresh) {
-        Map<String, dynamic> res =
-            await DistributorTokoRepository.getToko(limit: 10, offset: 0);
+        Map<String, dynamic> res = await DistributorTokoRepository.getToko(
+            limit: 10, offset: 0, search: event.search);
         if (res['statusCode'] == 200 && res['data']['status'] == 1) {
           var jsonObject = res['data']['data'] as List;
           tokos = jsonObject
@@ -35,7 +35,9 @@ class DistributorTokoBloc
       } else if (state is DistributorTokoListLoaded) {
         DistributorTokoListLoaded distributorTokoListLoaded = state;
         Map<String, dynamic> res = await DistributorTokoRepository.getToko(
-            limit: 10, offset: distributorTokoListLoaded.tokos.length);
+            limit: 10,
+            offset: distributorTokoListLoaded.tokos.length,
+            search: event.search);
         if (res['statusCode'] == 200 && res['data']['status'] == 1) {
           var jsonObject = res['data']['data'] as List;
           if (jsonObject.length == 0) {

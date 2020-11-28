@@ -7,8 +7,9 @@ class DistributorTokoGetEvent extends DistributorTokoEvent {}
 
 class DistributorTokoGetListEvent extends DistributorTokoEvent {
   final bool refresh;
+  final String search;
 
-  DistributorTokoGetListEvent({this.refresh = false});
+  DistributorTokoGetListEvent({this.refresh = false, this.search = ""});
 }
 
 class DistributorTokoTambahEvent extends DistributorTokoEvent {

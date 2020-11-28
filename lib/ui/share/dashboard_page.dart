@@ -13,14 +13,15 @@ class DashboradController extends GetxController {
   void onInit() async {
     if (await RoleUtils.whatRole(1)) {
       listIcon.value = [
-        {"title": "Mitra", "icon": Icons.group, "onpress": 5},
+        {"title": "Transaksi", "icon": Icons.monetization_on, "onpress": 3},
+        {"title": "Mitra", "icon": Icons.group, "onpress": 6},
         {"title": "Barang", "icon": Icons.local_offer, "onpress": 2},
         {
           "title": "Keuangan",
           "icon": Icons.account_balance_wallet,
-          "onpress": 4
+          "onpress": 5
         },
-        {"title": "Penjualan", "icon": Icons.bar_chart, "onpress": 3},
+        {"title": "Penjualan", "icon": Icons.bar_chart, "onpress": 4},
       ];
     }
     super.onInit();
@@ -117,47 +118,43 @@ class DashboardPage extends StatelessWidget {
                   ),
                   Divider(),
                   Expanded(
-                      child: Obx(
-                    () => Row(
-                        children: controller.listIcon
-                            .asMap()
-                            .map((index, value) => MapEntry(
-                                index,
-                                Expanded(
-                                  flex: 1,
-                                  child: Parent(
-                                    gesture: Gestures()
-                                      ..onTap(() {
-                                        homeController.page.value =
-                                            value['onpress'];
-                                      }),
-                                    style: ParentStyle()
-                                      ..margin(right: 0.02.sw)
-                                      ..ripple(true,
-                                          splashColor: Colors.blueAccent)
-                                      ..borderRadius(all: 10),
-                                    child: Column(
-                                      children: [
-                                        Icon(
-                                            controller.listIcon[index]
-                                                    ['icon'] ??
-                                                Icons.ac_unit,
-                                            size: 40.sp,
-                                            color: Colors.grey),
-                                        Txt(
-                                          controller.listIcon[index]['title'] ??
-                                              "",
-                                          style: TxtStyle()
-                                            ..fontSize(14.sp)
-                                            ..textColor(Colors.grey),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )))
-                            .values
-                            .toList()),
-                  ))
+                      child: Obx(() => ListView.builder(
+                            itemExtent: 80,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: controller.listIcon.length,
+                            itemBuilder: (context, index) => Parent(
+                              gesture: Gestures()
+                                ..onTap(() {
+                                  homeController.actionsList = [];
+                                  if (homeController.userModel.value.role_id ==
+                                          1 &&
+                                      controller.listIcon[index]['title']
+                                          .contains('Barang')) {
+                                    homeController.updateListBarang();
+                                  }
+                                  homeController.page.value =
+                                      controller.listIcon[index]['onpress'];
+                                }),
+                              style: ParentStyle()
+                                ..ripple(true, splashColor: Colors.blueAccent)
+                                ..borderRadius(all: 10),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                      controller.listIcon[index]['icon'] ??
+                                          Icons.ac_unit,
+                                      size: 40.sp,
+                                      color: Colors.grey),
+                                  Txt(
+                                    controller.listIcon[index]['title'] ?? "",
+                                    style: TxtStyle()
+                                      ..fontSize(14.sp)
+                                      ..textColor(Colors.grey),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )))
                 ],
               ),
               style: ParentStyle()

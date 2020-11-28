@@ -69,83 +69,76 @@ class TambahDistributorBarangController extends GetxController {
   }
 
   void showJenisBarangPicker(DistributorBarangBloc bloc) {
-    if (jeniss.length == 0) {
-      bloc..add(DistributorBarangGetStaticEvent());
-    } else {
-      int initialIndex = 0;
-      if (barang.value.jenis_barang_id != null) {
-        int no = 0;
-        for (var jenis in jeniss) {
-          if (barang.value.jenis_barang_id == int.parse(jenis['id'])) {
-            initialIndex = no;
-          }
-          no = no + 1;
+    bloc..add(DistributorBarangGetStaticEvent());
+    int initialIndex = 0;
+    if (barang.value.jenis_barang_id != null) {
+      int no = 0;
+      for (var jenis in jeniss) {
+        if (barang.value.jenis_barang_id == int.parse(jenis['id'])) {
+          initialIndex = no;
         }
+        no = no + 1;
       }
-      showModalBottomSheet(
-          context: Get.context,
-          builder: (BuildContext context) {
-            return Container(
-              height: 200.0,
-              child: CupertinoPicker(
-                  scrollController:
-                      FixedExtentScrollController(initialItem: initialIndex),
-                  itemExtent: 32.0,
-                  onSelectedItemChanged: (int index) {
-                    selectedJenis.value = jeniss[index]['nama'];
-                    barang.update((val) {
-                      val.jenis_barang_id = int.parse(jeniss[index]['id']);
-                    });
-                  },
-                  children:
-                      new List<Widget>.generate(jeniss.length, (int index) {
-                    return new Center(
-                      child: new Text(jeniss[index]['nama']),
-                    );
-                  })),
-            );
-          });
     }
+    showModalBottomSheet(
+        context: Get.context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 200.0,
+            child: CupertinoPicker(
+                scrollController:
+                    FixedExtentScrollController(initialItem: initialIndex),
+                itemExtent: 32.0,
+                onSelectedItemChanged: (int index) {
+                  selectedJenis.value = jeniss[index]['nama'];
+                  barang.update((val) {
+                    val.jenis_barang_id = int.parse(jeniss[index]['id']);
+                  });
+                },
+                children: new List<Widget>.generate(jeniss.length, (int index) {
+                  return new Center(
+                    child: new Text(jeniss[index]['nama']),
+                  );
+                })),
+          );
+        });
   }
 
   void showUkuranBarangPicker(DistributorBarangBloc bloc) {
-    if (ukurans.length == 0) {
-      bloc..add(DistributorBarangGetStaticEvent());
-    } else {
-      int initialIndex = 0;
-      if (barang.value.ukuran_barang_id != null) {
-        int no = 0;
-        for (var jenis in ukurans) {
-          if (barang.value.ukuran_barang_id == int.parse(jenis['id'])) {
-            initialIndex = no;
-          }
-          no = no + 1;
+    bloc..add(DistributorBarangGetStaticEvent());
+    int initialIndex = 0;
+    if (barang.value.ukuran_barang_id != null) {
+      int no = 0;
+      for (var jenis in ukurans) {
+        if (barang.value.ukuran_barang_id == int.parse(jenis['id'])) {
+          initialIndex = no;
         }
+        no = no + 1;
       }
-      showModalBottomSheet(
-          context: Get.context,
-          builder: (BuildContext context) {
-            return Container(
-              height: 200.0,
-              child: CupertinoPicker(
-                  scrollController:
-                      FixedExtentScrollController(initialItem: initialIndex),
-                  itemExtent: 32.0,
-                  onSelectedItemChanged: (int index) {
-                    selectedUkuran.value = ukurans[index]['nama'];
-                    barang.update((val) {
-                      val.ukuran_barang_id = int.parse(ukurans[index]['id']);
-                    });
-                  },
-                  children:
-                      new List<Widget>.generate(ukurans.length, (int index) {
-                    return new Center(
-                      child: new Text(ukurans[index]['nama']),
-                    );
-                  })),
-            );
-          });
     }
+    showModalBottomSheet(
+        context: Get.context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 200.0,
+            child: CupertinoPicker(
+                scrollController:
+                    FixedExtentScrollController(initialItem: initialIndex),
+                itemExtent: 32.0,
+                onSelectedItemChanged: (int index) {
+                  selectedUkuran.value = ukurans[index]['nama'];
+                  barang.update((val) {
+                    val.ukuran_barang_id = int.parse(ukurans[index]['id']);
+                  });
+                },
+                children:
+                    new List<Widget>.generate(ukurans.length, (int index) {
+                  return new Center(
+                    child: new Text(ukurans[index]['nama']),
+                  );
+                })),
+          );
+        });
   }
 
   Future<void> loadAssets() async {
@@ -316,7 +309,21 @@ class TambahDistributorBarangView extends StatelessWidget {
                         },
                       )),
                   SizedBox(
-                    height: 0.02.sh,
+                    height: 0.01.sh,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/jenisbarang");
+                    },
+                    child: Txt("Tambah Jenis Barang",
+                        style: TxtStyle()
+                          ..fontSize(12.ssp)
+                          ..textColor(Colors.black87)
+                          ..textDecoration(TextDecoration.underline)
+                          ..italic()),
+                  ),
+                  SizedBox(
+                    height: 0.01.sh,
                   ),
                   Txt("Ukuran Barang",
                       style: TxtStyle()
@@ -336,7 +343,21 @@ class TambahDistributorBarangView extends StatelessWidget {
                         },
                       )),
                   SizedBox(
-                    height: 0.02.sh,
+                    height: 0.01.sh,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/ukuranbarang");
+                    },
+                    child: Txt("Tambah Ukuran Barang",
+                        style: TxtStyle()
+                          ..fontSize(12.ssp)
+                          ..textColor(Colors.black87)
+                          ..textDecoration(TextDecoration.underline)
+                          ..italic()),
+                  ),
+                  SizedBox(
+                    height: 0.01.sh,
                   ),
                   Txt("Stok",
                       style: TxtStyle()

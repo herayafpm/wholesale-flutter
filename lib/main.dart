@@ -10,10 +10,13 @@ import 'package:wholesale/ui/auth/forgot_pass_page.dart';
 import 'package:wholesale/ui/auth/login_page.dart';
 import 'package:wholesale/ui/distributor/barang/detail_barang_distributor_page.dart';
 import 'package:wholesale/ui/distributor/barang/edit_distributor_barang_page.dart';
+import 'package:wholesale/ui/distributor/barang/manajemen_jenis_barang_page.dart';
+import 'package:wholesale/ui/distributor/barang/manajemen_ukuran_barang_page.dart';
 import 'package:wholesale/ui/distributor/barang/stok/manajemen_stok_barang_distributor_page.dart';
 import 'package:wholesale/ui/distributor/barang/stok/tambah_stok_barang_distributor_page.dart';
 import 'package:wholesale/ui/distributor/barang/tambah_distributor_barang_page.dart';
 import 'package:wholesale/ui/distributor/mitra/tambah_mitra_page.dart';
+import 'package:wholesale/ui/distributor/transaksi/transasksi_distributor_page.dart';
 import 'package:wholesale/ui/home_page.dart';
 import 'package:wholesale/ui/share/image_view.dart';
 import 'package:wholesale/ui/share/profile_edit_page.dart';
@@ -62,6 +65,10 @@ class App extends StatelessWidget {
         GetPage(name: "/editprofile", page: () => ProfileEditPage()),
         // Distributor - Mitra
         GetPage(name: "/tambahmitra", page: () => TambahMitraPage()),
+        // Distributor - Jenis Barang
+        GetPage(name: "/jenisbarang", page: () => ManajemenJenisBarangPage()),
+        // Distributor - Ukuran Barang
+        GetPage(name: "/ukuranbarang", page: () => ManajemenUkuranBarangPage()),
         // Distributor - Detail Barang
         GetPage(
             name: "/distributorbarang",
@@ -82,6 +89,11 @@ class App extends StatelessWidget {
         GetPage(
             name: "/distributortambahstokbarang",
             page: () => TambahStokBarangDistributorPage()),
+        // Distributor - Transaksi Distributor
+        GetPage(
+            name: "/transaksidistributor",
+            page: () => TransaksiDistributorPage()),
+
         // Toko - Profile
         GetPage(name: "/editprofiletoko", page: () => ProfileTokoEditPage()),
         // Toko - Karyawan - Tambah
