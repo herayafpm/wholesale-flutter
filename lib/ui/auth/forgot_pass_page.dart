@@ -55,6 +55,7 @@ class FormForgotPassView extends StatelessWidget {
                 Get.back();
               }
             },
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(context);
         } else if (state is AuthBlocStateError) {
           controller.isLoading.value = false;
@@ -68,6 +69,7 @@ class FormForgotPassView extends StatelessWidget {
               Icons.do_not_disturb,
               color: Colors.redAccent,
             ),
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(Get.context);
         }
       },
@@ -182,7 +184,6 @@ class FormForgotPassView extends StatelessWidget {
                       title: "Kirim Data",
                       isLoading: controller.isLoading.value,
                       onTap: () {
-                        FocusScope.of(context).unfocus();
                         if (controller.formKey.currentState.validate()) {
                           controller.forgotpass(bloc);
                         }

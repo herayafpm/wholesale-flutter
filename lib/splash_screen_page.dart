@@ -38,7 +38,6 @@ class SplashScreenPage extends GetView<SplashScreenController> {
         designSize: Size(StaticData.screenWidth, StaticData.screenHeight),
         allowFontScaling: true);
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Parent(
             child: Stack(
               children: [

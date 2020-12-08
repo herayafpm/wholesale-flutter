@@ -84,9 +84,7 @@ class ManajemenMitraView extends StatelessWidget {
         Flexible(
           flex: 1,
           child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
+            onTap: () {},
             child: BlocConsumer<DistributorTokoBloc, DistributorTokoState>(
               listener: (context, state) {
                 if (state is DistributorTokoStateError) {
@@ -133,6 +131,12 @@ class ManajemenMitraView extends StatelessWidget {
                           return Container(
                             margin: EdgeInsets.all(5),
                             child: ListTile(
+                              leading: (toko.utang)
+                                  ? Icon(
+                                      Icons.clear,
+                                      color: Colors.redAccent,
+                                    )
+                                  : null,
                               onTap: () {
                                 showDialog(
                                     context: context,
@@ -168,7 +172,13 @@ class ManajemenMitraView extends StatelessWidget {
                                   if (choice == "Tambah Barang") {
                                     Get.toNamed("/transaksidistributor",
                                         arguments: toko);
-                                  } else if (choice == "hapus") {
+                                  } else if (choice == "Manajemen Transaksi") {
+                                    Get.toNamed("/manajementransaksimitra",
+                                        arguments: toko);
+                                  } else if (choice == "List Barang") {
+                                    Get.toNamed("/listbarangmitra",
+                                        arguments: toko);
+                                  } else if (choice == "Hapus") {
                                     showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
@@ -196,12 +206,15 @@ class ManajemenMitraView extends StatelessWidget {
                                   }
                                 },
                                 itemBuilder: (BuildContext context) {
-                                  return ["Tambah Barang", "hapus"]
-                                      .map((String choice) {
+                                  return [
+                                    "Tambah Barang",
+                                    "Manajemen Transaksi",
+                                    "List Barang",
+                                    "Hapus"
+                                  ].map((String choice) {
                                     return PopupMenuItem<String>(
                                       value: choice,
-                                      child: Text(
-                                          choice.capitalizeFirst + " Toko"),
+                                      child: Text(choice + " Toko"),
                                     );
                                   }).toList();
                                 },
@@ -217,7 +230,7 @@ class ManajemenMitraView extends StatelessWidget {
                     return Container(
                       child: Center(
                           child: Txt(
-                        "Anda Belum Pernah Melakukan Pendaftaran Difabel",
+                        "Anda belum menambahkan toko",
                         style: TxtStyle()
                           ..fontSize(30.sp)
                           ..textColor(Colors.white)
@@ -228,7 +241,7 @@ class ManajemenMitraView extends StatelessWidget {
                 }
                 return Container(
                   child: Center(
-                    child: Text("Anda belum membuat toko"),
+                    child: Text("Anda belum menambahkan toko"),
                   ),
                 );
               },

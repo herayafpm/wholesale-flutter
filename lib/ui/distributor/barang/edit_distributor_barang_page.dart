@@ -231,25 +231,30 @@ class EditDistributorBarangController extends GetxController {
           content: image,
         ));
   }
+
+  @override
+  void onInit() {
+    barang.value = Get.arguments;
+    super.onInit();
+  }
 }
 
 class EditDistributorBarangPage extends StatelessWidget {
   final controller = Get.put(EditDistributorBarangController());
-  DistributorBarangModel barang;
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(StaticData.screenWidth, StaticData.screenHeight),
         allowFontScaling: true);
-    barang = Get.arguments;
     return Scaffold(
         appBar: AppBar(
-            title: Text("Edit Distributor Barang ${barang.nama_barang}")),
+            title: Obx(() => Text(
+                "Edit Distributor Barang ${controller.barang.value.nama_barang}"))),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocProvider(
             create: (context) => DistributorBarangBloc()
-              ..add(DistributorBarangGetEvent(barang.id)),
+              ..add(DistributorBarangGetEvent(controller.barang.value.id)),
             child: EditDistributorBarangView(),
           ),
         ));
@@ -279,26 +284,28 @@ class EditDistributorBarangView extends StatelessWidget {
         } else if (state is DistributorBarangStateError) {
           controller.isLoading.value = false;
           Flushbar(
-            title: "Error",
-            message: state.errors['message'] ?? "",
-            duration: Duration(seconds: 5),
-            icon: Icon(
-              Icons.do_not_disturb,
-              color: Colors.redAccent,
-            ),
-          )..show(Get.context);
+              title: "Error",
+              message: state.errors['message'] ?? "",
+              duration: Duration(seconds: 5),
+              icon: Icon(
+                Icons.do_not_disturb,
+                color: Colors.redAccent,
+              ),
+              flushbarPosition: FlushbarPosition.TOP)
+            ..show(Get.context);
         } else if (state is DistributorBarangFormSuccess) {
           controller.isLoading.value = false;
           Get.back();
           Flushbar(
-            title: "Success",
-            message: state.data['message'] ?? "",
-            duration: Duration(seconds: 5),
-            icon: Icon(
-              Icons.check,
-              color: Colors.greenAccent,
-            ),
-          )..show(Get.context);
+              title: "Success",
+              message: state.data['message'] ?? "",
+              duration: Duration(seconds: 5),
+              icon: Icon(
+                Icons.check,
+                color: Colors.greenAccent,
+              ),
+              flushbarPosition: FlushbarPosition.TOP)
+            ..show(Get.context);
         }
       },
       child: Form(
@@ -341,7 +348,6 @@ class EditDistributorBarangView extends StatelessWidget {
                             ? controller.selectedJenis.value
                             : "Pilih Jenis Barang",
                         onTap: () {
-                          FocusScope.of(context).unfocus();
                           controller.showJenisBarangPicker(bloc);
                         },
                       )),
@@ -375,7 +381,6 @@ class EditDistributorBarangView extends StatelessWidget {
                             ? controller.selectedUkuran.value
                             : "Pilih Ukuran Barang",
                         onTap: () {
-                          FocusScope.of(context).unfocus();
                           controller.showUkuranBarangPicker(bloc);
                         },
                       )),
@@ -511,7 +516,8 @@ class EditDistributorBarangView extends StatelessWidget {
                         child: Parent(
                           gesture: Gestures()
                             ..onTap(() {
-                              FocusScope.of(context).unfocus();
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
                               controller.loadAssets();
                             }),
                           child: Center(
@@ -541,7 +547,8 @@ class EditDistributorBarangView extends StatelessWidget {
                                 ? Parent(
                                     gesture: Gestures()
                                       ..onTap(() {
-                                        FocusScope.of(context).unfocus();
+                                        FocusScope.of(context)
+                                            .requestFocus(new FocusNode());
                                         controller.showImage();
                                       }),
                                     child: Center(
@@ -580,7 +587,6 @@ class EditDistributorBarangView extends StatelessWidget {
                   title: "Kirim Data",
                   isLoading: controller.isLoading.value,
                   onTap: () {
-                    FocusScope.of(context).unfocus();
                     if (controller.formKey.currentState.validate()) {
                       controller.process(bloc);
                     }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:wholesale/models/distributor_barang_model.dart';
 import 'package:wholesale/models/toko_model.dart';
 import 'package:wholesale/repositories/distributor/distributor_toko_repository.dart';
 
@@ -80,6 +81,64 @@ class DistributorTokoBloc
       } else {
         yield DistributorTokoStateError(res);
         this..add(DistributorTokoGetListEvent(refresh: true));
+      }
+    } else if (event is DistributorTokoGetListBarangEvent) {
+      List<DistributorBarangModel> barangs = [];
+      if (state is DistributorTokoInitial || event.refresh) {
+        Map<String, dynamic> res =
+            await DistributorTokoRepository.getListBarangToko(
+                limit: 10,
+                offset: 0,
+                search: event.search,
+                toko_id: event.toko_id);
+        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+          var jsonObject = res['data']['data'] as List;
+          barangs = jsonObject
+              .map<DistributorBarangModel>((e) => DistributorBarangModel(
+                  id: int.parse(e['barang_distributor_id']),
+                  nama_barang: e['nama_barang'],
+                  stok: int.parse(e['stok']),
+                  harga_jual: int.parse(e['harga_jual']),
+                  keterangan: e['keterangan'],
+                  created_at: e['created_at']))
+              .toList();
+          yield DistributorBarangTokoListLoaded(
+              barangs: barangs, hasReachMax: false);
+        } else if (res['statusCode'] == 400) {
+          yield DistributorTokoStateError(res['data']);
+        } else {
+          yield DistributorTokoStateError(res);
+        }
+      } else if (state is DistributorBarangTokoListLoaded) {
+        DistributorBarangTokoListLoaded distributorBarangTokoListLoaded = state;
+        Map<String, dynamic> res =
+            await DistributorTokoRepository.getListBarangToko(
+                limit: 10,
+                offset: distributorBarangTokoListLoaded.barangs.length,
+                search: event.search);
+        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+          var jsonObject = res['data']['data'] as List;
+          if (jsonObject.length == 0) {
+            yield distributorBarangTokoListLoaded.copyWith(hasReachMax: true);
+          } else {
+            barangs = jsonObject
+                .map<DistributorBarangModel>((e) => DistributorBarangModel(
+                    id: int.parse(e['barang_distributor_id']),
+                    nama_barang: e['nama_barang'],
+                    stok: int.parse(e['stok']),
+                    harga_jual: int.parse(e['harga_jual']),
+                    keterangan: e['keterangan'],
+                    created_at: e['created_at']))
+                .toList();
+            yield DistributorBarangTokoListLoaded(
+                barangs: distributorBarangTokoListLoaded.barangs + barangs,
+                hasReachMax: false);
+          }
+        } else if (res['statusCode'] == 400) {
+          yield DistributorTokoStateError(res['data']);
+        } else {
+          yield DistributorTokoStateError(res);
+        }
       }
     }
   }

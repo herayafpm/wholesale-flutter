@@ -37,3 +37,16 @@ class DistributorTokoListLoaded extends DistributorTokoState {
         hasReachMax: hasReachMax ?? this.hasReachMax);
   }
 }
+
+class DistributorBarangTokoListLoaded extends DistributorTokoState {
+  List<DistributorBarangModel> barangs;
+  bool hasReachMax;
+
+  DistributorBarangTokoListLoaded({this.barangs, this.hasReachMax});
+  DistributorBarangTokoListLoaded copyWith(
+      {List<DistributorBarangModel> barangs, bool hasReachMax}) {
+    return DistributorBarangTokoListLoaded(
+        barangs: barangs ?? this.barangs,
+        hasReachMax: hasReachMax ?? this.hasReachMax);
+  }
+}

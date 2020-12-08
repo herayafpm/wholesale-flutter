@@ -7,9 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wholesale/bloc/distributor/barang/distributor_barang_bloc.dart';
+import 'package:wholesale/controllers/home_controller.dart';
 import 'package:wholesale/models/distributor_barang_model.dart';
 import 'package:wholesale/static_data.dart';
-import 'package:wholesale/ui/home_page.dart';
 
 class ManajemenBarangDistributorPage extends StatelessWidget {
   final homeController = Get.find<HomeController>();
@@ -120,9 +120,7 @@ class ManajemenBarangDistributorView extends StatelessWidget {
                   if (stateData.distributorBarangs != null &&
                       stateData.distributorBarangs.length > 0) {
                     return GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                      },
+                      onTap: () {},
                       child: SmartRefresher(
                         controller: _refreshController,
                         enablePullDown: true,

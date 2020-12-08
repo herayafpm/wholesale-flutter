@@ -304,7 +304,6 @@ class TambahDistributorBarangView extends StatelessWidget {
                             ? controller.selectedJenis.value
                             : "Pilih Jenis Barang",
                         onTap: () {
-                          FocusScope.of(context).unfocus();
                           controller.showJenisBarangPicker(bloc);
                         },
                       )),
@@ -338,7 +337,6 @@ class TambahDistributorBarangView extends StatelessWidget {
                             ? controller.selectedUkuran.value
                             : "Pilih Ukuran Barang",
                         onTap: () {
-                          FocusScope.of(context).unfocus();
                           controller.showUkuranBarangPicker(bloc);
                         },
                       )),
@@ -474,7 +472,8 @@ class TambahDistributorBarangView extends StatelessWidget {
                         child: Parent(
                           gesture: Gestures()
                             ..onTap(() {
-                              FocusScope.of(context).unfocus();
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
                               controller.loadAssets();
                             }),
                           child: Center(
@@ -504,7 +503,8 @@ class TambahDistributorBarangView extends StatelessWidget {
                                 ? Parent(
                                     gesture: Gestures()
                                       ..onTap(() {
-                                        FocusScope.of(context).unfocus();
+                                        FocusScope.of(context)
+                                            .requestFocus(new FocusNode());
                                         controller.showImage();
                                       }),
                                     child: Center(
@@ -542,7 +542,6 @@ class TambahDistributorBarangView extends StatelessWidget {
                   title: "Kirim Data",
                   isLoading: controller.isLoading.value,
                   onTap: () {
-                    FocusScope.of(context).unfocus();
                     if (controller.formKey.currentState.validate()) {
                       controller.process(bloc);
                     }

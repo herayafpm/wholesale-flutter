@@ -10,6 +10,8 @@ class DistributorBarangModel {
   String keterangan;
   String ukuran_barang_nama;
   String jenis_barang_nama;
+  String created_at;
+  String updated_at;
 
   DistributorBarangModel(
       {this.id = 0,
@@ -22,7 +24,9 @@ class DistributorBarangModel {
       this.harga_jual,
       this.keterangan,
       this.ukuran_barang_nama,
-      this.jenis_barang_nama});
+      this.jenis_barang_nama,
+      this.created_at,
+      this.updated_at});
 
   factory DistributorBarangModel.createFromJson(Map<String, dynamic> json) {
     return DistributorBarangModel(
@@ -37,6 +41,8 @@ class DistributorBarangModel {
       keterangan: json['keterangan'],
       ukuran_barang_nama: json['ukuran_barang_nama'],
       jenis_barang_nama: json['jenis_barang_nama'],
+      created_at: json['created_at'],
+      updated_at: json['updated_at'],
     );
   }
 

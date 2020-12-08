@@ -75,6 +75,7 @@ class TambahStokBarangDistributorView extends StatelessWidget {
                 Get.back();
               }
             },
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(context);
         } else if (state is DistributorBarangStokStateError) {
           controller.isLoading.value = false;
@@ -86,6 +87,7 @@ class TambahStokBarangDistributorView extends StatelessWidget {
               Icons.do_not_disturb,
               color: Colors.redAccent,
             ),
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(Get.context);
         }
       },
@@ -138,7 +140,6 @@ class TambahStokBarangDistributorView extends StatelessWidget {
                   title: "Kirim Data",
                   isLoading: controller.isLoading.value,
                   onTap: () {
-                    FocusScope.of(context).unfocus();
                     if (controller.formKey.currentState.validate()) {
                       controller.process(bloc);
                     }

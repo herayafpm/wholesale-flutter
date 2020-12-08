@@ -63,6 +63,7 @@ class TambahMitraView extends StatelessWidget {
       listener: (context, state) {
         if (state is DistributorTokoStateSuccess) {
           controller.isLoading.value = false;
+          Get.back();
           Flushbar(
             title: "Success",
             message: state.data['message'],
@@ -71,11 +72,7 @@ class TambahMitraView extends StatelessWidget {
               color: Colors.greenAccent,
             ),
             duration: Duration(seconds: 2),
-            onStatusChanged: (FlushbarStatus status) {
-              if (status == FlushbarStatus.DISMISSED) {
-                Get.back();
-              }
-            },
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(context);
         } else if (state is DistributorTokoStateError) {
           controller.isLoading.value = false;
@@ -90,6 +87,7 @@ class TambahMitraView extends StatelessWidget {
               Icons.do_not_disturb,
               color: Colors.redAccent,
             ),
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(Get.context);
         }
       },
@@ -200,7 +198,6 @@ class TambahMitraView extends StatelessWidget {
                   title: "Kirim Data",
                   isLoading: controller.isLoading.value,
                   onTap: () {
-                    FocusScope.of(context).unfocus();
                     if (controller.formKey.currentState.validate()) {
                       controller.process(bloc);
                     }

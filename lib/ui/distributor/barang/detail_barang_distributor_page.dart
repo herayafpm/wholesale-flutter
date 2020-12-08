@@ -8,12 +8,12 @@ import 'package:get/get.dart';
 import 'package:wholesale/bloc/distributor/barang/distributor_barang_bloc.dart';
 import 'package:wholesale/models/distributor_barang_model.dart';
 import 'package:wholesale/static_data.dart';
+import 'package:wholesale/utils/convert_utils.dart';
 
 class DetailBarangDistributorPage extends StatelessWidget {
   DistributorBarangModel barang;
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).unfocus();
     ScreenUtil.init(context,
         designSize: Size(StaticData.screenWidth, StaticData.screenHeight),
         allowFontScaling: true);
@@ -37,7 +37,7 @@ class DetailBarangDistributorView extends StatelessWidget {
         listener: (context, state) {
       if (state is DistributorBarangStateError) {
         Flushbar(
-          title: "Error",
+          title: "Erro",
           message: state.errors['message'] ?? "",
           duration: Duration(seconds: 5),
           icon: Icon(
@@ -48,19 +48,14 @@ class DetailBarangDistributorView extends StatelessWidget {
         )..show(Get.context);
       } else if (state is DistributorBarangFormSuccess) {
         Flushbar(
-          title: "Error",
+          title: "Success",
           message: state.data['message'] ?? "",
           duration: Duration(seconds: 5),
           icon: Icon(
-            Icons.do_not_disturb,
-            color: Colors.redAccent,
+            Icons.check,
+            color: Colors.greenAccent,
           ),
           flushbarPosition: FlushbarPosition.TOP,
-          onStatusChanged: (status) {
-            if (status == FlushbarStatus.DISMISSED) {
-              Get.back();
-            }
-          },
         )..show(Get.context);
       }
     }, builder: (context, state) {
@@ -184,17 +179,19 @@ class DetailBarangDistributorView extends StatelessWidget {
               ),
               ListTile(
                 title: Text("Stok"),
-                subtitle: Text(barang.stok.toString()),
+                subtitle: Text("${ConvertUtils.formatMoney(barang.stok)}"),
                 tileColor: Colors.white,
               ),
               ListTile(
                 title: Text("Harga Dasar"),
-                subtitle: Text(barang.harga_dasar.toString()),
+                subtitle:
+                    Text("${ConvertUtils.formatMoney(barang.harga_dasar)}"),
                 tileColor: Colors.white,
               ),
               ListTile(
                 title: Text("Harga Jual"),
-                subtitle: Text(barang.harga_jual.toString()),
+                subtitle:
+                    Text("${ConvertUtils.formatMoney(barang.harga_jual)}"),
                 tileColor: Colors.white,
               ),
               ListTile(

@@ -50,6 +50,7 @@ class FormLoginView extends StatelessWidget {
               color: Colors.greenAccent,
             ),
             duration: Duration(seconds: 2),
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(context);
           var boxUser = await Hive.openBox("user_model");
           var userModel = UserModel.createFromJson(state.data['data']);
@@ -65,6 +66,7 @@ class FormLoginView extends StatelessWidget {
               Icons.do_not_disturb,
               color: Colors.redAccent,
             ),
+            flushbarPosition: FlushbarPosition.TOP,
           )..show(Get.context);
         }
       },
@@ -144,7 +146,6 @@ class FormLoginView extends StatelessWidget {
                       title: "Login",
                       isLoading: controller.isLoading.value,
                       onTap: () {
-                        FocusScope.of(context).unfocus();
                         if (controller.formKey.currentState.validate()) {
                           controller.login(authBloc);
                         }

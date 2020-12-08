@@ -92,6 +92,7 @@ class DistributorBarangBloc
           await DistributorBarangRepository.deleteBarang(event.id);
       if (res['statusCode'] == 200 && res['data']['status'] == 1) {
         yield DistributorBarangFormSuccess(res['data']);
+        this..add(DistributorBarangGetEvent(event.id));
       } else if (res['statusCode'] == 400) {
         yield DistributorBarangStateError(res['data']);
         this..add(DistributorBarangGetEvent(event.id));

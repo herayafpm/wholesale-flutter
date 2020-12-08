@@ -5,6 +5,7 @@ class TokoModel {
   String email;
   String alamat;
   String no_telp;
+  bool utang;
 
   TokoModel(
       {this.id = 0,
@@ -12,7 +13,8 @@ class TokoModel {
       this.nama,
       this.alamat,
       this.email,
-      this.no_telp});
+      this.no_telp,
+      this.utang});
 
   factory TokoModel.createFromJson(Map<String, dynamic> json) {
     return TokoModel(
@@ -22,6 +24,7 @@ class TokoModel {
       alamat: json['alamat'],
       email: json['email'],
       no_telp: json['no_telp'],
+      utang: json['utang'] == 1,
     );
   }
 

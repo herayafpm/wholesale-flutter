@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "787770529025",
+    "firebase_url": "https://wholesale-1b348.firebaseio.com",
+    "project_id": "wholesale-1b348",
+    "storage_bucket": "wholesale-1b348.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787770529025:android:7ec0ec85abba260713f700",
+        "android_client_info": {
+          "package_name": "id.herayafitra.wholesale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "787770529025-9u14ht1p98ts9p0g5apcj7pskagj3cvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_k1oMwa0Omb6YyatTrZz30wW0RNFhzPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "787770529025-9u14ht1p98ts9p0g5apcj7pskagj3cvq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

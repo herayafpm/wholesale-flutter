@@ -12,6 +12,15 @@ class DistributorTokoGetListEvent extends DistributorTokoEvent {
   DistributorTokoGetListEvent({this.refresh = false, this.search = ""});
 }
 
+class DistributorTokoGetListBarangEvent extends DistributorTokoEvent {
+  final bool refresh;
+  final String search;
+  final int toko_id;
+
+  DistributorTokoGetListBarangEvent(
+      {this.refresh = false, this.search = "", this.toko_id});
+}
+
 class DistributorTokoTambahEvent extends DistributorTokoEvent {
   final TokoModel toko;
 

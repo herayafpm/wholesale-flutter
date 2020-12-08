@@ -2,6 +2,7 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:wholesale/controllers/home_controller.dart';
 import 'package:wholesale/static_data.dart';
 import 'package:wholesale/ui/home_page.dart';
 import 'package:wholesale/utils/greeting_utils.dart';
@@ -13,15 +14,9 @@ class DashboradController extends GetxController {
   void onInit() async {
     if (await RoleUtils.whatRole(1)) {
       listIcon.value = [
-        {"title": "Transaksi", "icon": Icons.monetization_on, "onpress": 3},
-        {"title": "Mitra", "icon": Icons.group, "onpress": 6},
+        {"title": "Mitra", "icon": Icons.group, "onpress": 4},
         {"title": "Barang", "icon": Icons.local_offer, "onpress": 2},
-        {
-          "title": "Keuangan",
-          "icon": Icons.account_balance_wallet,
-          "onpress": 5
-        },
-        {"title": "Penjualan", "icon": Icons.bar_chart, "onpress": 4},
+        {"title": "Penjualan", "icon": Icons.bar_chart, "onpress": 3},
       ];
     }
     super.onInit();
@@ -165,48 +160,6 @@ class DashboardPage extends StatelessWidget {
                 ..elevation(3),
             ),
           ),
-          Positioned(
-            top: 0.4.sh,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Column(
-              children: [
-                Txt("Transaksi Hari ini", style: TxtStyle()..fontSize(16.sp)),
-                SizedBox(height: 0.01.sh),
-                Flexible(
-                  flex: 1,
-                  child: ListView.builder(
-                    itemCount: 20,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Parent(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Txt("Transaksi $index"),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Txt("Toko $index"),
-                                  Txt("Rp. ${1000000 * index}"),
-                                ],
-                              )
-                            ],
-                          ),
-                          style: ParentStyle()
-                            ..background.color(Colors.white)
-                            ..elevation(2)
-                            ..padding(all: 0.02.sh)
-                            ..height(0.1.sh)
-                            ..margin(horizontal: 0.04.sw, vertical: 0.01.sh));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          )
         ],
       ),
     );

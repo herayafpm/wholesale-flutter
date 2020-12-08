@@ -197,7 +197,6 @@ class ProfileTokoEditView extends StatelessWidget {
                         title: "Kirim Data",
                         isLoading: controller.isLoading.value,
                         onTap: () {
-                          FocusScope.of(context).unfocus();
                           if (controller.formKey.currentState.validate()) {
                             controller.updateToko(bloc);
                           }

@@ -20,7 +20,6 @@ class KaryawanBloc extends Bloc<KaryawanEvent, KaryawanState> {
       if (state is KaryawanInitial || event.refresh) {
         Map<String, dynamic> res =
             await KaryawanRepository.getKaryawan(limit: 10, offset: 0);
-        print("data $res");
         if (res['statusCode'] == 200 && res['data']['status'] == 1) {
           var jsonObject = res['data']['data'] as List;
           karyawans = jsonObject
@@ -68,7 +67,6 @@ class KaryawanBloc extends Bloc<KaryawanEvent, KaryawanState> {
     } else if (event is KaryawanDeleteEvent) {
       Map<String, dynamic> res =
           await KaryawanRepository.deleteKaryawan(event.id);
-      print("data $res");
       if (res['statusCode'] == 200 && res['data']['status'] == 1) {
         yield KaryawanStateSuccess(res['data']);
         this..add(KaryawanGetListEvent(refresh: true));

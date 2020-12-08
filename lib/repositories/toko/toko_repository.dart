@@ -45,4 +45,25 @@ abstract class TokoRepository {
       return ResponseUtils.error(e.message);
     }
   }
+
+  static Future<Map<String, dynamic>> updateTokenToko(String token) async {
+    try {
+      Dio dio = await DioService.withToken();
+      Response response = await dio.put("/toko/token", data: {"token": token});
+      Map<String, dynamic> data = Map<String, dynamic>();
+      print("data $response");
+      data['statusCode'] = response.statusCode;
+      data['data'] = response.data;
+      return data;
+    } on SocketException catch (e) {
+      print(e);
+      return ResponseUtils.error(e.message);
+    } on DioError catch (e) {
+      print(e);
+      return ResponseUtils.error(e.message);
+    } catch (e) {
+      print(e);
+      return ResponseUtils.error(e.message);
+    }
+  }
 }

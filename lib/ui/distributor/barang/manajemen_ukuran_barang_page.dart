@@ -50,7 +50,6 @@ class ManajemenUkuranBarangView extends StatelessWidget {
   String nama = "";
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).unfocus();
     bloc = BlocProvider.of<UkuranBarangBloc>(context);
     return Stack(
       children: [

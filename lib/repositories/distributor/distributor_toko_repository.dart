@@ -67,4 +67,26 @@ abstract class DistributorTokoRepository {
       return ResponseUtils.error(e.message);
     }
   }
+
+  static Future<Map<String, dynamic>> getListBarangToko(
+      {int limit = 10, int offset = 0, String search = "", int toko_id}) async {
+    try {
+      Dio dio = await DioService.withToken();
+      Response response = await dio.get(
+          "/distributor/toko/barang?toko_id=$toko_id&limit=$limit&offset=$offset&search=$search");
+      Map<String, dynamic> data = Map<String, dynamic>();
+      data['statusCode'] = response.statusCode;
+      data['data'] = response.data;
+      return data;
+    } on SocketException catch (e) {
+      print(e);
+      return ResponseUtils.error(e.message);
+    } on DioError catch (e) {
+      print(e);
+      return ResponseUtils.error(e.message);
+    } catch (e) {
+      print(e);
+      return ResponseUtils.error(e.message);
+    }
+  }
 }

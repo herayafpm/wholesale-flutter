@@ -1,5 +1,5 @@
 abstract class StaticData {
-  static String baseUrl = "http://192.168.43.209:8080";
+  static String baseUrl = "https://posuga.herayadev.my.id";
   static double screenWidth = 360;
   static double screenHeight = 640;
 }
