@@ -112,7 +112,7 @@ class PelunasanTransaksiMitraViewItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Txt("Total Bayar Saat Ini"),
+                      Txt("Jumlah yang belum dibayar"),
                       Txt("${ConvertUtils.formatMoney(controller.transaksi.value.jumlah_bayar)}")
                     ],
                   ),

@@ -198,5 +198,8 @@ class HomeController extends GetxController {
     var boxUser = await Hive.openBox("user_model");
     boxUser.deleteAt(0);
     Get.offAllNamed("/login");
+    if (role.value == 2) {
+      await TokoRepository.updateTokenToko("");
+    }
   }
 }

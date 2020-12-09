@@ -394,6 +394,46 @@ class TransaksiDistributorView extends StatelessWidget {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Txt(
+                                                            "Stok",
+                                                            style: TxtStyle()
+                                                              ..fontSize(
+                                                                  12..ssp)
+                                                              ..fontWeight(
+                                                                  FontWeight
+                                                                      .bold),
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Obx(
+                                                            () => Txt(
+                                                              "${ConvertUtils.formatMoney(barang.stok - controller.jumlah.value)}",
+                                                              style: TxtStyle()
+                                                                ..textColor(
+                                                                    Colors
+                                                                        .black54)
+                                                                ..fontSize(
+                                                                    12..ssp),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  color: Colors.white,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
                                                       GestureDetector(
                                                         onLongPressStart:
                                                             (_) async {

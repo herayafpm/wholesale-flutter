@@ -24,6 +24,6 @@ abstract class DateTimeUtils {
 
   static String humanize(String datetime) {
     DateTime dateTime = DateTime.parse(datetime);
-    return DateFormat("dd MMMM yyyy hh.mm").format(dateTime);
+    return DateFormat("dd MMMM yyyy H.mm").format(dateTime);
   }
 }

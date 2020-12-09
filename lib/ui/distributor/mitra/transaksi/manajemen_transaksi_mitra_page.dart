@@ -128,6 +128,7 @@ class ManajemenTransaksiMitraView extends StatelessWidget {
                                 },
                               ),
                               tileColor: Colors.white,
+                              isThreeLine: true,
                               leading: (transaksi.status)
                                   ? Icon(Icons.check, color: Colors.greenAccent)
                                   : Icon(Icons.clear, color: Colors.redAccent),
@@ -139,7 +140,11 @@ class ManajemenTransaksiMitraView extends StatelessWidget {
                                       style: TextStyle(color: Colors.black54)),
                                   TextSpan(
                                       text:
-                                          "Total Bayar: Rp${ConvertUtils.formatMoney(transaksi.jumlah_bayar)}",
+                                          "Total Bayar: Rp${ConvertUtils.formatMoney(transaksi.jumlah_bayar)}\n",
+                                      style: TextStyle(color: Colors.black54)),
+                                  TextSpan(
+                                      text:
+                                          "Total Sudah Dibayar: Rp${ConvertUtils.formatMoney(transaksi.bayar)}",
                                       style: TextStyle(color: Colors.black54)),
                                 ]),
                               ),
