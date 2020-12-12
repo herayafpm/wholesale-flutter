@@ -37,21 +37,21 @@ class ManajemenPrinterPage extends StatelessWidget {
                 ),
                 onRefresh: _onRefresh,
                 onLoading: null,
-                child: ListView.builder(
-                  itemCount: controller.devices.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    PrinterBluetooth device = controller.devices[index];
-                    return ListTile(
-                      onTap: () {
-                        controller.testPrint(device);
+                child: Obx(() => ListView.builder(
+                      itemCount: controller.devices.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        PrinterBluetooth device = controller.devices[index];
+                        return ListTile(
+                          onTap: () {
+                            controller.testPrint(device);
+                          },
+                          title: Text(device.name),
+                          subtitle: Text(device.address),
+                          leading: Icon(Icons.print),
+                          tileColor: Colors.white,
+                        );
                       },
-                      title: Text(device.name),
-                      subtitle: Text(device.address),
-                      leading: Icon(Icons.print),
-                      tileColor: Colors.white,
-                    );
-                  },
-                ),
+                    )),
               )),
         ],
       ),
