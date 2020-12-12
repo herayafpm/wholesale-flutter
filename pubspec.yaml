@@ -23,13 +23,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  blue_thermal_printer: ^1.1.1
   cached_network_image: ^2.3.3
   cupertino_icons: ^1.0.0
   dio: ^3.0.10
   division: ^0.8.8
+  esc_pos_bluetooth: ^0.2.8
   flushbar: ^1.10.4
   flutter_bloc: ^6.1.0
+  flutter_bluetooth_basic: ^0.1.5
   flutter_image_compress: ^0.7.0
   flutter_launcher_icons: ^0.8.1
   flutter_screenutil: ^3.2.0

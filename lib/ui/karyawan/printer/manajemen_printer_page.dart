@@ -1,4 +1,4 @@
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -37,32 +37,22 @@ class ManajemenPrinterPage extends StatelessWidget {
                 ),
                 onRefresh: _onRefresh,
                 onLoading: null,
-                child: Obx(
-                  () => ListView.builder(
-                    itemCount: controller.deviceBluetooths.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      BluetoothDevice device =
-                          controller.deviceBluetooths[index];
-                      return ListTile(
-                        tileColor: Colors.white,
-                        title: Text(device.name),
-                        onTap: () {
-                          controller.itemOnTap(device);
-                        },
-                      );
-                    },
-                  ),
+                child: ListView.builder(
+                  itemCount: controller.devices.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    PrinterBluetooth device = controller.devices[index];
+                    return ListTile(
+                      onTap: () {
+                        controller.testPrint(device);
+                      },
+                      title: Text(device.name),
+                      subtitle: Text(device.address),
+                      leading: Icon(Icons.print),
+                      tileColor: Colors.white,
+                    );
+                  },
                 ),
               )),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
-            child: Obx(
-              () => RaisedButton(
-                  onPressed:
-                      controller.connected.value ? controller.tesPrint : null,
-                  child: Text('TesPrint')),
-            ),
-          ),
         ],
       ),
     );

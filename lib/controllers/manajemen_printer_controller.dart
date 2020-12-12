@@ -1,133 +1,82 @@
-import 'dart:io';
-
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:wholesale/utils/convert_utils.dart';
 
 class ManajemenPrinterController extends GetxController {
-  final connected = false.obs;
-  final pressed = false.obs;
-  final pathImage = "".obs;
+  PrinterBluetoothManager printerManager = PrinterBluetoothManager();
+  BluetoothManager bluetoothManager = BluetoothManager.instance;
+  final devices = [].obs;
+  void initPrinter() {
+    printerManager.startScan(Duration(seconds: 2));
+    printerManager.scanResults.listen((event) {
+      devices.value = event;
+    });
+  }
+
+  List<Map<String, dynamic>> dataDummy = [
+    {"title": 'Produk 1', "price": 10000, "qty": 2, "total_price": 20000},
+    {"title": 'Produk 2', "price": 20000, "qty": 1, "total_price": 20000},
+  ];
 
   @override
   void onInit() {
-    // TODO: implement onInit
-    print("data okasan");
-    initPrinter();
+    bluetoothManager.state.listen((event) {
+      if (event == 12) {
+        initPrinter();
+      } else {
+        Fluttertoast.showToast(msg: "Bluetooth tidak aktif, mohon diaktifkan");
+      }
+    });
     super.onInit();
   }
 
-  void initPrinter() {
-    initPlatformState();
-    initSavetoPath();
+  disposeWorker() {
+    printerManager.stopScan();
   }
 
-  BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
-  final deviceBluetooths = [].obs;
-  BluetoothDevice deviceBluetooth;
-
-  initSavetoPath() async {
-    //read and write
-    //image max 300px X 300px
-    final filename = 'icon.png';
-    var bytes = await rootBundle.load("assets/images/$filename");
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    writeToFile(bytes, '$dir/$filename');
-    pathImage.value = '$dir/$filename';
+  Future<void> testPrint(PrinterBluetooth device) async {
+    printerManager.selectPrinter(device);
+    final result =
+        await printerManager.printTicket(await ticket(PaperSize.mm80));
+    Fluttertoast.showToast(msg: result.msg);
   }
 
-  Future<void> writeToFile(ByteData data, String path) {
-    final buffer = data.buffer;
-    return new File(path).writeAsBytes(
-        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-  }
-
-  Future<void> initPlatformState() async {
-    List<BluetoothDevice> devices = [];
-
-    try {
-      devices = await bluetooth.getBondedDevices();
-      print("data $devices");
-    } on PlatformException {
-      // TODO - Error
+  Future<Ticket> ticket(PaperSize paper) async {
+    final ticket = Ticket(paper);
+    int total = 0;
+    ticket.text("Toko Ku",
+        styles: PosStyles(
+            align: PosAlign.center,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2));
+    for (int i; i < dataDummy.length; i++) {
+      ticket.text(dataDummy[i]['title']);
+      total += dataDummy[i]['total_price'];
+      ticket.row([
+        PosColumn(
+            text:
+                "${ConvertUtils.formatMoney(dataDummy[i]['price'])} x ${ConvertUtils.formatMoney(dataDummy[i]['qty'])}",
+            width: 6),
+        PosColumn(
+            text: "${ConvertUtils.formatMoney(dataDummy[i]['total_price'])}",
+            width: 6),
+      ]);
     }
-
-    bluetooth.onStateChanged().listen((state) {
-      switch (state) {
-        case BlueThermalPrinter.CONNECTED:
-          connected.value = true;
-          pressed.value = false;
-          break;
-        case BlueThermalPrinter.DISCONNECTED:
-          connected.value = false;
-          pressed.value = false;
-          break;
-        default:
-          print(state);
-          break;
-      }
-    });
-    deviceBluetooths.value = devices;
-  }
-
-  void itemOnTap(BluetoothDevice device) {
-    deviceBluetooth = device;
-    update();
-    connectBluetooth();
-  }
-
-  void connectBluetooth() {
-    if (deviceBluetooth == null) {
-      print('data No device selected.');
-    } else {
-      bluetooth.isConnected.then((isConnected) {
-        if (!isConnected) {
-          bluetooth.connect(deviceBluetooth).catchError((error) {
-            pressed.value = false;
-          });
-          pressed.value = true;
-        }
-      });
-    }
-  }
-
-  void tesPrint() async {
-    //SIZE
-    // 0- normal size text
-    // 1- only bold text
-    // 2- bold with medium text
-    // 3- bold with large text
-    //ALIGN
-    // 0- ESC_ALIGN_LEFT
-    // 1- ESC_ALIGN_CENTER
-    // 2- ESC_ALIGN_RIGHT
-    bluetooth.isConnected.then((isConnected) {
-      if (isConnected) {
-        bluetooth.printCustom("HEADER", 3, 1);
-        bluetooth.printNewLine();
-        bluetooth.printImage(pathImage.value);
-        bluetooth.printNewLine();
-        bluetooth.printLeftRight("LEFT", "RIGHT", 0);
-        bluetooth.printLeftRight("LEFT", "RIGHT", 1);
-        bluetooth.printNewLine();
-        bluetooth.printLeftRight("LEFT", "RIGHT", 2);
-        bluetooth.printCustom("Body left", 1, 0);
-        bluetooth.printCustom("Body right", 0, 2);
-        bluetooth.printNewLine();
-        bluetooth.printCustom("Terimakasih", 2, 1);
-        bluetooth.printNewLine();
-        bluetooth.printQRcode("Heraya Tamvan", 50, 50, 1);
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.paperCut();
-      }
-    });
-  }
-
-  void disconnectBluetooth() {
-    bluetooth.disconnect();
-    pressed.value = true;
+    ticket.feed(1);
+    ticket.row([
+      PosColumn(text: "Total", width: 6, styles: PosStyles(bold: true)),
+      PosColumn(
+          text: "Rp ${ConvertUtils.formatMoney(total)}",
+          width: 6,
+          styles: PosStyles(bold: true)),
+    ]);
+    ticket.feed(2);
+    ticket.text("Terima Kasih",
+        styles: PosStyles(align: PosAlign.center, bold: true));
+    ticket.cut();
+    return ticket;
   }
 }
