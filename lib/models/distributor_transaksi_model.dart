@@ -4,7 +4,6 @@ import 'package:wholesale/models/distributor_pelunasan_model.dart';
 
 import 'toko_model.dart';
 
-@HiveType(typeId: 2)
 class DistributorTransaksiModel extends HiveObject {
   int id;
   TokoModel toko;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wholesale/bloc/auth/authbloc.dart';
+import 'package:workmanager/workmanager.dart';
 
 class LoginController extends GetxController {
   final username = ''.obs;
@@ -10,7 +11,6 @@ class LoginController extends GetxController {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   void login(AuthBloc bloc) async {
     isLoading.value = !isLoading.value;
     username.value = usernameController.text;

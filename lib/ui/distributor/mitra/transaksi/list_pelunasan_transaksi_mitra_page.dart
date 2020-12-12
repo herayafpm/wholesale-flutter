@@ -36,7 +36,11 @@ class ListPelunasanTransaksiMitraPage extends StatelessWidget {
                           style: TextStyle(color: Colors.black54)),
                       TextSpan(
                           text:
-                              "Membayar: ${ConvertUtils.formatMoney(e.bayar)}",
+                              "Membayar: ${ConvertUtils.formatMoney(e.bayar)}\n",
+                          style: TextStyle(color: Colors.black54)),
+                      TextSpan(
+                          text:
+                              "Total Sudah Dibayar: ${ConvertUtils.formatMoney(transaksi.bayar)}",
                           style: TextStyle(color: Colors.black54)),
                     ]),
                   )))

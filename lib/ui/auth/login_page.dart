@@ -54,7 +54,11 @@ class FormLoginView extends StatelessWidget {
           )..show(context);
           var boxUser = await Hive.openBox("user_model");
           var userModel = UserModel.createFromJson(state.data['data']);
-          boxUser.add(userModel);
+          try {
+            boxUser.putAt(0, userModel);
+          } catch (e) {
+            boxUser.add(userModel);
+          }
           Get.offAllNamed("/home");
         } else if (state is AuthBlocStateError) {
           controller.isLoading.value = false;

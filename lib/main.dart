@@ -1,3 +1,7 @@
+import 'dart:isolate';
+import 'dart:ui';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -39,8 +43,31 @@ import 'package:wholesale/ui/toko/tanggungan/barang_tanggungan_toko_page.dart';
 import 'package:wholesale/ui/toko/tanggungan/detail_tanggungan_toko_page.dart';
 import 'package:wholesale/ui/toko/tanggungan/list_pelunasan_tanggungan_toko_page.dart';
 import 'package:wholesale/ui/toko/transaksi/barang_transaksi_toko_page.dart';
+import 'package:wholesale/utils/workmanager_utils.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'ui/distributor/mitra/transaksi/detail_transaksi_mitra_page.dart';
+
+void callbackDispatcher() {
+  Workmanager.executeTask((task, inputData) async {
+    final sendPort = IsolateNameServer.lookupPortByName('port');
+    assert(sendPort != null);
+    var port = ReceivePort();
+    var completer = Completer<bool>();
+    StreamSubscription subscription;
+    subscription = port.listen((message) {
+      bool result = message;
+      completer.complete(result);
+      subscription.cancel();
+    });
+    sendPort.send([port.sendPort, task, inputData]);
+    var appDocumentDirectory =
+        await pathProvider.getApplicationDocumentsDirectory();
+    Hive.init(appDocumentDirectory.path);
+    Hive.registerAdapter(UserModelAdapter());
+    return completer.future;
+  });
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +78,18 @@ void main() async {
   Hive.registerAdapter(UserModelAdapter());
   OneSignal.shared
       .init("246fbd22-450f-4ffb-b5b6-5bc03fbf6046", iOSSettings: null);
+  Workmanager.initialize(
+      callbackDispatcher, // The top level function, aka callbackDispatcher
+      isInDebugMode:
+          false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      );
+  var port = ReceivePort();
+  IsolateNameServer.removePortNameMapping('port');
+  IsolateNameServer.registerPortWithName(port.sendPort, 'port');
+  port.listen((dynamic data) async {
+    SendPort sendPort = data[0];
+    sendPort.send(WorkManagerUtils.runWork(task: data[1], inputData: data[2]));
+  });
   runApp(App());
 }
 

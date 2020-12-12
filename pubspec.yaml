@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  blue_thermal_printer: ^1.1.1
   cached_network_image: ^2.3.3
   cupertino_icons: ^1.0.0
   dio: ^3.0.10
@@ -42,6 +43,8 @@ dependencies:
   photo_view: ^0.10.3
   pull_to_refresh: ^1.6.2
   swipedetector: ^1.2.0
+  uuid: ^2.2.2
+  workmanager: ^0.2.3
 
 dev_dependencies:
   flutter_test:

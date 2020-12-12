@@ -1,5 +1,6 @@
 import 'package:division/division.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -11,6 +12,7 @@ import 'package:wholesale/ui/distributor/dashboard_distributor_page.dart';
 import 'package:wholesale/ui/distributor/mitra/manajemen_mitra_page.dart';
 import 'package:wholesale/ui/distributor/penjualan/data_penjualan_distributor_page.dart';
 import 'package:wholesale/ui/karyawan/dashboard_karyawan_page.dart';
+import 'package:wholesale/ui/karyawan/printer/manajemen_printer_page.dart';
 import 'package:wholesale/ui/share/profile_page.dart';
 import 'package:wholesale/ui/toko/barang/manajemen_barang_toko_page.dart';
 import 'package:wholesale/ui/toko/dashboard_toko_page.dart';
@@ -20,6 +22,8 @@ import 'package:wholesale/ui/toko/profile_toko_page.dart';
 import 'package:wholesale/ui/toko/tanggungan/tanggungan_toko_page.dart';
 import 'package:wholesale/ui/toko/transaksi/list_transaksi_toko_page.dart';
 import 'package:wholesale/utils/role_utils.dart';
+import 'package:wholesale/utils/workmanager_utils.dart';
+import 'package:workmanager/workmanager.dart';
 
 class HomeController extends GetxController {
   final obj = ''.obs;
@@ -112,7 +116,7 @@ class HomeController extends GetxController {
           ProfilePage(),
           ManajemenBarangTokoPage(),
           ListTransaksiTokoPage(),
-          Container(),
+          ManajemenPrinterPage(),
         ];
       }
       var status = await OneSignal.shared.getPermissionSubscriptionState();
@@ -195,11 +199,15 @@ class HomeController extends GetxController {
   }
 
   void logout() async {
-    var boxUser = await Hive.openBox("user_model");
-    boxUser.deleteAt(0);
+    var uuid = Uuid();
+    Workmanager.registerOneOffTask(
+      uuid.v4(),
+      WorkManagerUtils.logoutTaskKey,
+      inputData: <String, dynamic>{
+        'role': role.value,
+      },
+    );
+
     Get.offAllNamed("/login");
-    if (role.value == 2) {
-      await TokoRepository.updateTokenToko("");
-    }
   }
 }
